@@ -4,6 +4,8 @@ const entradaEstoqueRoutes = require('./src/routes/entradaEstoqueRoutes');
 const loginRoutes = require('./src/routes/loginRoutes');
 const suprimentosRoutes = require('./src/routes/suprimentosRoutes');
 const requisicoesRoutes = require('./src/routes/requisicoesSuprimentosRoutes');
+const requisicoesEstoqueRoutes = require('./src/routes/requisicoesEstoqueRoutes');
+const saidasRoutes = require('./src/routes/saidasRoutes');
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
 const { autenticar, validarFilial, exigirPermissao } = require('./src/middlewares/autenticacao');
 
@@ -27,6 +29,12 @@ router.use((req, res, next) => {
     } else {
       permissoes = ['suprimentos'];
     }
+  } else if (path === '/requisicoes-estoque' || path.startsWith('/requisicoes-estoque/')) {
+    permissoes = ['estoqueRequisicoes'];
+  } else if (path === '/saidas-produtos' || path.startsWith('/saidas-produtos/')) {
+    permissoes = ['estoque', 'estoqueEditar'];
+  } else if (path === '/saidas-suprimentos' || path.startsWith('/saidas-suprimentos/')) {
+    permissoes = ['suprimentos', 'suprimentosEditar'];
   } else if (path === '/entrada_estoque' || path.startsWith('/entrada_estoque/')
     || ['/adicionar_estoque', '/editar_estoque', '/excluir_estoque'].some((legacyPath) =>
       path === legacyPath || path.startsWith(`${legacyPath}/`))) {
@@ -49,5 +57,7 @@ router.use('/', homeRoutes);
 router.use('/', entradaEstoqueRoutes);
 router.use('/', suprimentosRoutes);
 router.use('/', requisicoesRoutes);
+router.use('/', requisicoesEstoqueRoutes);
+router.use('/', saidasRoutes);
 
 module.exports = router;

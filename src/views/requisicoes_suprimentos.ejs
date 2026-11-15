@@ -3,7 +3,7 @@
         <section class="panel">
           <div class="supplies-toolbar">
             <div>
-              <h2>Requisições</h2>
+              <h2>Requisições de Suprimentos</h2>
               <p class="muted">Selecione os suprimentos e informe a quantidade solicitada na filial <%= filial %>.</p>
             </div>
           </div>
@@ -35,7 +35,7 @@
                 <select id="suprimentoSelecionado" required>
                   <option value="">Selecione</option>
                   <% suprimentos.forEach((suprimento) => { %>
-                    <option value="<%= suprimento.id %>"><%= suprimento.nome %></option>
+                    <option value="<%= suprimento.id %>"><%= suprimento.nome %> - <%= suprimento.impressora || '-' %> - Qnt atual: <%= suprimento.quantidadeAtual %></option>
                   <% }) %>
                 </select>
               </label>
@@ -44,7 +44,7 @@
               </label>
               <div class="supplies-actions">
                 <button class="button-primary" id="confirmarItemRequisicao" value="default" type="button">OK</button>
-                <button class="button-secondary" value="cancel" type="submit">Cancelar</button>
+                <button class="button-secondary" type="button" data-close-supply-dialog>Fechar</button>
               </div>
             </form>
           </dialog>

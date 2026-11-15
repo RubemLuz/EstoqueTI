@@ -107,7 +107,7 @@ adicionar?.addEventListener('click', () => {
 
 // Valida a seleção, adiciona o material à lista da requisição e fecha o diálogo.
 confirmar?.addEventListener('click', () => {
-  if (!suprimento.value || !quantidade.reportValidity()) return;
+  if (!suprimento.reportValidity() || !quantidade.reportValidity()) return;
   const option = suprimento.selectedOptions[0];
   itens.push({
     id: suprimento.value,
@@ -115,6 +115,10 @@ confirmar?.addEventListener('click', () => {
     quantidade: Number(quantidade.value)
   });
   atualizarLista();
+  dialog.close();
+});
+
+dialog?.querySelector('[data-close-supply-dialog]')?.addEventListener('click', () => {
   dialog.close();
 });
 

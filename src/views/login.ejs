@@ -13,13 +13,16 @@
       <div class="login-brand"><span class="brand-mark">ET</span></div>
       <h1>Estocagem TI</h1>
       <p>Acesse sua conta</p>
+      <% if (success && success.length) { %>
+        <div class="login-success" role="status"><%= success.join(' ') %></div>
+      <% } %>
       <% if (error && error.length) { %>
         <div class="login-error" role="alert"><%= error.join(' ') %></div>
       <% } %>
       <label>Usuário<input type="text" name="usuario" autocomplete="username" required></label>
       <label>Senha<input type="password" name="senha" autocomplete="current-password" required></label>
-      <label>Código de segurança<input type="password" name="codigoSeguranca" inputmode="numeric" autocomplete="one-time-code" required></label>
       <button class="button-primary login-submit" type="submit">Entrar</button>
+      <a class="back-link" href="/esqueci-senha">Esqueci minha senha</a>
     </form>
   </main>
 </body>

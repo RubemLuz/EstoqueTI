@@ -48,7 +48,10 @@ const rotasComFilial = new Set([
   '/excluir_estoque',
   '/suprimentos',
   '/suprimentos/relatorio',
-  '/requisicoes-suprimentos'
+  '/requisicoes-suprimentos',
+  '/requisicoes-estoque',
+  '/saidas-produtos',
+  '/saidas-suprimentos'
 ]);
 app.use((req, res, next) => {
   const filialInformada = Number(req.query.filial ?? req.body?.filial);

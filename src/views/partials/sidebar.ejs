@@ -13,8 +13,11 @@
     <% if (usuario.administrador || permissoes.suprimentos) { %>
       <a class="menu-link <%= activePage === 'suprimentos' ? 'active' : '' %>" href="/suprimentos"><span class="menu-icon">&#9783;</span><span>Suprimentos</span></a>
     <% } %>
+      <% if (usuario.administrador || permissoes.estoqueRequisicoes) { %>
+      <a class="menu-link <%= activePage === 'reqestoque' ? 'active' : '' %>" href="/requisicoes-estoque"><span class="menu-icon">&#9993;</span><span>Requisições Estoque</span></a>
+    <% } %>
     <% if (usuario.administrador || permissoes.requisicoes) { %>
-      <a class="menu-link <%= activePage === 'requisicoes' ? 'active' : '' %>" href="/requisicoes-suprimentos"><span class="menu-icon">&#9993;</span><span>Requisições</span></a>
+      <a class="menu-link <%= activePage === 'requisicoes' ? 'active' : '' %>" href="/requisicoes-suprimentos"><span class="menu-icon">&#9993;</span><span>Requisições Surpimentos</span></a>
     <% } %>
   </nav>
   <button class="account-button" id="accountButton" type="button"><span class="menu-icon">&#128100;</span><span>Minha conta</span></button>

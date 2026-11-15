@@ -9,6 +9,7 @@
             </div>
             <% if (usuario.administrador || (permissoes.suprimentosEditar ?? permissoes.suprimentos)) { %>
               <button class="button-primary" id="novoSuprimento" type="button">Novo suprimento</button>
+              <a class="button-primary" href="/saidas-suprimentos?filial=<%= filial %>">Saída de Suprimentos</a>
             <% } %>
           </div>
 

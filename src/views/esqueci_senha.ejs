@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body class="login-page">
+  <main class="login-container">
+    <form class="login-card" method="post" action="/esqueci-senha">
+      <div class="login-brand"><span class="brand-mark">ET</span></div>
+      <h1>Recuperar senha</h1>
+      <p>Informe seu usuário, código de segurança e uma nova senha.</p>
+      <% if (error && error.length) { %>
+        <div class="login-error" role="alert"><%= error.join(' ') %></div>
+      <% } %>
+      <label>Usuário<input type="text" name="usuario" autocomplete="username" minlength="3" maxlength="30" required></label>
+      <label>Código de segurança<input type="password" name="codigoSeguranca" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="off" required></label>
+      <label>Nova senha<input type="password" name="novaSenha" autocomplete="new-password" minlength="8" maxlength="72" required></label>
+      <button class="button-primary login-submit" type="submit">Alterar senha</button>
+      <a class="back-link" href="/login">Voltar ao login</a>
+    </form>
+  </main>
+</body>
+</html>

@@ -30,6 +30,7 @@ const criarUsuarioAdministrador = async () => {
         suprimentosEditar: true,
         suprimentosExcluir: true,
         requisicoes: true,
+        estoqueRequisicoes: true,
         administracao: true
       }
     });

@@ -2,7 +2,7 @@
       <div class="page-content">
         <section class="panel user-panel">
           <h2>Novo usuário</h2>
-          <p class="muted">A senha e o código de segurança serão armazenados usando bcrypt.</p>
+          <p class="muted">O código de segurança será gerado automaticamente. Apenas o administrador master poderá visualizá-lo.</p>
 
           <% if (error && error.length) { %>
             <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
@@ -13,7 +13,6 @@
               <label>Nome<input name="nome" minlength="2" maxlength="80" required></label>
               <label>Usuário<input name="usuario" minlength="3" maxlength="30" pattern="[a-zA-Z0-9._-]+" autocomplete="username" required></label>
               <label>Senha<input name="senha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></label>
-              <label>Código de segurança<input name="codigoSeguranca" type="password" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="off" required></label>
             </div>
             <fieldset class="permissions-fieldset">
               <legend>Permissões iniciais</legend>
@@ -24,6 +23,7 @@
               <label><input type="checkbox" name="permissoes[suprimentosEditar]"> Editar/cadastrar suprimentos</label>
               <label><input type="checkbox" name="permissoes[suprimentosExcluir]"> Excluir/desativar suprimentos</label>
               <label><input type="checkbox" name="permissoes[requisicoes]"> Requisições</label>
+              <label><input type="checkbox" name="permissoes[estoqueRequisicoes]"> Requisições de estoque</label>
               <label><input type="checkbox" name="permissoes[administracao]"> Administração</label>
             </fieldset>
             <fieldset class="permissions-fieldset">

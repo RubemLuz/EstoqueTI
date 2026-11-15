@@ -9,6 +9,12 @@
             <% if (usuario.administrador || (permissoes.estoqueEditar ?? permissoes.estoque)) { %>
               <button class="button-primary" id="novoProduto" type="button">Novo produto</button>
             <% } %>
+            <% if (usuario.administrador || permissoes.estoqueRequisicoes) { %>
+              <a class="button-primary" href="/requisicoes-estoque?filial=<%= filial %>">Requisições de estoque</a>
+            <% } %>
+            <% if (usuario.administrador || (permissoes.estoqueEditar ?? permissoes.estoque)) { %>
+              <a class="button-primary" href="/saidas-produtos?filial=<%= filial %>">Saída de Produtos</a>
+            <% } %>
           </div>
 
           <% if (success && success.length) { %>

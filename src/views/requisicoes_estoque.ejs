@@ -1,0 +1,131 @@
+<%- include('partials/app-start', { title, activePage }) %>
+      <div class="page-content">
+        <section class="panel">
+          <div class="supplies-toolbar">
+            <div>
+              <h2>Requisições de Estoque</h2>
+              <p class="muted">Solicite produtos para reposição e acompanhe o recebimento na filial <%= filial %>.</p>
+            </div>
+            <!-- <a class="button-secondary" href="/entrada_estoque?filial=<%= filial %>">Voltar ao estoque</a> -->
+          </div>
+
+          <% if (success && success.length) { %>
+            <div class="request-notice request-notice-success" role="status"><%= success.join(' ') %></div>
+          <% } %>
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <form id="formRequisicaoEstoque" method="post" action="/requisicoes-estoque">
+            <input type="hidden" name="filial" value="<%= filial %>">
+            <input type="hidden" name="itens" id="itensRequisicaoEstoque" value="[]">
+            <div class="request-items">
+              <div id="listaItensRequisicaoEstoque" class="request-list"></div>
+              <p id="mensagemSemItensEstoque" class="muted">Nenhum produto adicionado.</p>
+            </div>
+            <div class="supplies-actions">
+              <button class="button-primary" id="adicionarItemRequisicaoEstoque" type="button" <%= produtos.length ? '' : 'disabled' %>>Adicionar produto</button>
+              <button class="button-primary" id="enviarRequisicaoEstoque" type="submit" disabled>Requisitar</button>
+            </div>
+            <% if (!produtos.length) { %>
+              <p class="muted">Não há produtos ativos cadastrados nesta filial.</p>
+            <% } %>
+          </form>
+
+          <dialog id="dialogProdutoEstoque" class="request-dialog">
+            <form method="dialog" id="formItemRequisicaoEstoque">
+              <h3>Adicionar produto</h3>
+              <label>Produto
+                <select id="produtoEstoqueSelecionado" required>
+                  <option value="">Selecione</option>
+                  <% produtos.forEach((produto) => { %>
+                    <option value="<%= produto.id %>"><%= produto.nome %> - <%= produto.modelo || '-' %> - Qnt atual: <%= produto.quantidadeAtual %></option>
+                  <% }) %>
+                </select>
+              </label>
+              <label>Quantidade
+                <input id="quantidadeProdutoEstoque" type="number" min="1" step="1" value="1" required>
+              </label>
+              <div class="supplies-actions">
+                <button class="button-primary" id="confirmarItemRequisicaoEstoque" value="default" type="button">Adicionar</button>
+                <button class="button-secondary" type="button" data-close-product-dialog>Fechar</button>
+              </div>
+            </form>
+          </dialog>
+
+          <div class="request-history">
+            <h3>Requisições registradas</h3>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Número</th><th>Total de produtos</th><th>Data</th><th>Status</th><th>Ação</th></tr></thead>
+                <tbody>
+                  <% if (requisicoes.length) { %>
+                    <% requisicoes.forEach((requisicao) => { %>
+                      <tr>
+                        <td><%= requisicao.id %></td>
+                        <td><%= requisicao.itens.reduce((total, item) => total + Number(item.quantidade || 0), 0) %></td>
+                        <td><%= new Date(requisicao.data).toLocaleString('pt-BR') %></td>
+                        <td><span class="request-status <%= requisicao.status === 'Recebido' ? 'request-status-received' : 'request-status-pending' %>"><%= requisicao.status %></span></td>
+                        <td><button class="button-primary" type="button" data-open-stock-request="<%= requisicao.id %>">Abrir requisição</button></td>
+                      </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr><td class="empty-state" colspan="5">Nenhuma requisição de estoque registrada nesta filial.</td></tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <% requisicoes.forEach((requisicao) => { %>
+            <dialog id="detalhe-requisicao-estoque-<%= requisicao.id %>" class="request-dialog request-detail-dialog">
+              <h3>Requisição <%= requisicao.id %></h3>
+              <p class="muted">Data: <%= new Date(requisicao.data).toLocaleString('pt-BR') %> · Status: <%= requisicao.status %></p>
+              <form id="receber-requisicao-estoque-<%= requisicao.id %>" method="post" action="/requisicoes-estoque/<%= requisicao.id %>/receber" data-receive-stock-form>
+                <input type="hidden" name="filial" value="<%= filial %>">
+                <div class="table-scroll">
+                  <table>
+                    <thead><tr><th>Produto</th><th>Modelo</th><th>Categoria</th><th>Solicitado</th><th>Recebido</th></tr></thead>
+                    <tbody>
+                      <% requisicao.itens.forEach((item, index) => { %>
+                        <tr>
+                          <td><%= item.nome %></td>
+                          <td><%= item.modelo || '-' %></td>
+                          <td><%= item.categoria || '-' %></td>
+                          <td><%= item.quantidade %></td>
+                          <td>
+                            <input
+                              class="request-quantity"
+                              type="number"
+                              name="quantidades[<%= index %>]"
+                              min="0"
+                              step="1"
+                              required
+                              value="<%= requisicao.status === 'Recebido' ? (item.quantidadeRecebida ?? item.quantidade) : item.quantidade %>"
+                              data-original-value="<%= requisicao.status === 'Recebido' ? (item.quantidadeRecebida ?? item.quantidade) : item.quantidade %>"
+                              aria-label="Quantidade recebida de <%= item.nome %>"
+                              disabled
+                            >
+                          </td>
+                        </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </form>
+              <div class="request-dialog-actions">
+                <button class="button-secondary" type="button" data-close-stock-request>Fechar</button>
+                <% if (requisicao.status === 'Pendente') { %>
+                  <button class="button-primary" type="button" form="receber-requisicao-estoque-<%= requisicao.id %>" data-confirm-stock-receipt>Receber</button>
+                <% } %>
+                <form method="post" action="/requisicoes-estoque/<%= requisicao.id %>/excluir" data-delete-stock-request>
+                  <input type="hidden" name="filial" value="<%= filial %>">
+                  <button class="button-danger" type="submit">Excluir</button>
+                </form>
+              </div>
+            </dialog>
+          <% }) %>
+        </section>
+      </div>
+<script src="/js/requisicoes-estoque.js"></script>
+<%- include('partials/app-end') %>

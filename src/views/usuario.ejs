@@ -4,7 +4,7 @@
           <div class="supplies-toolbar">
             <div>
               <h2>Bem-vindo, <%= usuario.nome %></h2>
-              <p class="muted">Usuário: <%= usuario.usuario %></p>
+              <!-- <p class="muted">Usuário: <%= usuario.usuario %></p> -->
             </div>
             <form method="post" action="/logout">
               <button class="button-secondary" type="submit">Sair</button>
@@ -21,7 +21,7 @@
           <% if (usuario.administrador || permissoes.administracao) { %>
             <h3>Administração</h3>
             <div class="user-actions">
-              <a class="button-primary" href="/usuario/permissoes">Permissões</a>
+              <a class="button-primary" href="/usuario/permissoes">Usuários</a>
               <a class="button-primary" href="/usuario/novo">Novo usuário</a>
               <a class="button-danger" href="/usuario/dados">Excluir dados do sistema</a>
             </div>

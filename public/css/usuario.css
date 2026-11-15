@@ -78,6 +78,106 @@
   text-align: left;
 }
 
+.users-table td {
+  vertical-align: middle;
+}
+
+.user-status {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.user-status-active {
+  color: #17613a;
+  background: #d9f2e3;
+}
+
+.user-status-inactive {
+  color: #8d2424;
+  background: #fde2e2;
+}
+
+.user-edit-row > td {
+  padding: 0;
+  background: #f7f8fa;
+}
+
+.user-edit-panel {
+  padding: 22px;
+  text-align: left;
+}
+
+.user-edit-panel h3 {
+  margin: 0 0 18px;
+}
+
+.user-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr);
+  gap: 20px;
+}
+
+.user-edit-fieldset {
+  justify-content: flex-start;
+}
+
+.user-edit-fieldset + .user-edit-fieldset {
+  margin-top: 14px;
+}
+
+.user-edit-fieldset input {
+  flex: 0 0 auto;
+}
+
+.user-edit-actions,
+.user-management-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.user-management-actions {
+  align-content: flex-start;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 0;
+}
+
+.user-management-form {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #dfe4eb;
+  border-radius: 8px;
+  padding: 14px;
+  background: #fff;
+}
+
+.user-management-form p {
+  margin: 0;
+}
+
+.user-management-form label {
+  display: grid;
+  gap: 7px;
+}
+
+.user-management-form input {
+  width: 100%;
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.user-edit-close {
+  margin-top: 16px;
+}
+
 .danger-panel {
   border-color: #efcaca;
 }
@@ -110,5 +210,9 @@
 
   .user-panel table {
     min-width: 1080px;
+  }
+
+  .user-edit-grid {
+    grid-template-columns: 1fr;
   }
 }

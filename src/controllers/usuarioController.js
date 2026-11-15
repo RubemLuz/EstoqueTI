@@ -1,9 +1,12 @@
 const bcrypt = require('bcrypt');
+const { randomInt } = require('crypto');
 const mongoose = require('mongoose');
 const Usuario = require('../models/Usuario');
 const ItemEstoque = require('../models/ItemEstoque');
 const Suprimento = require('../models/Suprimento');
 const RequisicaoSuprimento = require('../models/RequisicaoSuprimento');
+
+const gerarCodigoSeguranca = () => String(randomInt(0, 100000)).padStart(5, '0');
 
 const filiaisDoFormulario = (valor) => {
   const valores = Array.isArray(valor)
@@ -29,7 +32,7 @@ exports.permissoes = async (req, res, next) => {
       .sort({ usuario: 1 })
       .lean();
     res.render('permissoes', {
-      title: 'Permissões',
+      title: 'Usuários',
       activePage: 'usuario',
       usuarios: usuarios.map((usuario) => ({
         ...usuario,
@@ -62,6 +65,7 @@ exports.salvarPermissoes = async (req, res, next) => {
       'suprimentosEditar',
       'suprimentosExcluir',
       'requisicoes',
+      'estoqueRequisicoes',
       'administracao'
     ]) {
       usuario.permissoes[nome] = permissoesEnviadas[nome] === 'on';
@@ -81,6 +85,96 @@ exports.salvarPermissoes = async (req, res, next) => {
   }
 };
 
+exports.atualizarAtivo = async (req, res, next) => {
+  try {
+    const ativo = req.body.ativo;
+    if (ativo !== 'true' && ativo !== 'false') {
+      req.flash('error', 'Status de usuário inválido.');
+      return res.redirect('/usuario/permissoes');
+    }
+
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) {
+      req.flash('error', 'Usuário não encontrado.');
+      return res.redirect('/usuario/permissoes');
+    }
+    if (usuario.administrador) {
+      req.flash('error', 'A conta do administrador master não pode ser desativada.');
+      return res.redirect('/usuario/permissoes');
+    }
+    if (String(usuario._id) === String(req.usuario._id) && ativo === 'false') {
+      req.flash('error', 'Você não pode desativar sua própria conta.');
+      return res.redirect('/usuario/permissoes');
+    }
+
+    usuario.ativo = ativo === 'true';
+    await usuario.save();
+
+    req.flash('success', `Usuário ${usuario.nome} ${usuario.ativo ? 'ativado' : 'desativado'}.`);
+    res.redirect('/usuario/permissoes');
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.alterarSenha = async (req, res, next) => {
+  try {
+    const senha = String(req.body.senha || '');
+    if (senha.length < 8 || senha.length > 72) {
+      req.flash('error', 'A senha deve ter entre 8 e 72 caracteres.');
+      return res.redirect('/usuario/permissoes');
+    }
+
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) {
+      req.flash('error', 'Usuário não encontrado.');
+      return res.redirect('/usuario/permissoes');
+    }
+    if (usuario.administrador) {
+      req.flash('error', 'A senha do administrador master não pode ser alterada por esta tela.');
+      return res.redirect('/usuario/permissoes');
+    }
+
+    usuario.senhaHash = await bcrypt.hash(senha, 12);
+    await usuario.save();
+
+    req.flash('success', `Senha de ${usuario.nome} alterada.`);
+    res.redirect('/usuario/permissoes');
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.gerarCodigoSeguranca = async (req, res, next) => {
+  try {
+    if (!req.usuario.administrador) {
+      return res.status(403).render('error', {
+        title: 'Acesso não permitido',
+        message: 'Somente o administrador master pode gerar e visualizar códigos de segurança.'
+      });
+    }
+
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) {
+      req.flash('error', 'Usuário não encontrado.');
+      return res.redirect('/usuario/permissoes');
+    }
+    if (usuario.administrador) {
+      req.flash('error', 'O código da conta master não pode ser alterado por esta tela.');
+      return res.redirect('/usuario/permissoes');
+    }
+
+    const codigoSeguranca = gerarCodigoSeguranca();
+    usuario.codigoSegurancaHash = await bcrypt.hash(codigoSeguranca, 12);
+    await usuario.save();
+
+    req.flash('success', `Novo código de segurança de ${usuario.nome}: ${codigoSeguranca}`);
+    res.redirect('/usuario/permissoes');
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.novo = (req, res) => {
   res.render('novo_usuario', {
     title: 'Novo usuário',
@@ -93,13 +187,11 @@ exports.criar = async (req, res, next) => {
     const nome = String(req.body.nome || '').trim();
     const usuario = String(req.body.usuario || '').trim().toLowerCase();
     const senha = String(req.body.senha || '');
-    const codigoSeguranca = String(req.body.codigoSeguranca || '');
     const nomeValido = nome.length >= 2 && nome.length <= 80;
     const usuarioValido = /^[a-z0-9._-]{3,30}$/.test(usuario);
 
-    if (!nomeValido || !usuarioValido || senha.length < 8 || senha.length > 72
-      || !/^\d{5}$/.test(codigoSeguranca)) {
-      req.flash('error', 'Confira os dados: nome de 2 a 80 caracteres, usuário de 3 a 30 caracteres, senha de 8 a 72 caracteres e código de segurança com 5 dígitos.');
+    if (!nomeValido || !usuarioValido || senha.length < 8 || senha.length > 72) {
+      req.flash('error', 'Confira os dados: nome de 2 a 80 caracteres, usuário de 3 a 30 caracteres e senha de 8 a 72 caracteres.');
       return res.redirect('/usuario/novo');
     }
 
@@ -109,6 +201,7 @@ exports.criar = async (req, res, next) => {
       req.flash('error', 'Selecione pelo menos uma filial válida para o usuário.');
       return res.redirect('/usuario/novo');
     }
+    const codigoSeguranca = gerarCodigoSeguranca();
     await Usuario.create({
       nome,
       usuario,
@@ -123,11 +216,14 @@ exports.criar = async (req, res, next) => {
         suprimentosEditar: permissoesEnviadas.suprimentosEditar === 'on',
         suprimentosExcluir: permissoesEnviadas.suprimentosExcluir === 'on',
         requisicoes: permissoesEnviadas.requisicoes === 'on',
+        estoqueRequisicoes: permissoesEnviadas.estoqueRequisicoes === 'on',
         administracao: permissoesEnviadas.administracao === 'on'
       }
     });
 
-    req.flash('success', `Usuário ${nome} criado.`);
+    req.flash('success', req.usuario.administrador
+      ? `Usuário ${nome} criado. Código de segurança: ${codigoSeguranca}`
+      : `Usuário ${nome} criado. O código de segurança foi gerado e só pode ser visualizado pelo administrador master.`);
     res.redirect('/usuario/permissoes');
   } catch (error) {
     if (error.code === 11000) {

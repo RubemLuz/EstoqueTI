@@ -1,0 +1,58 @@
+<%- include('partials/app-start', { title, activePage }) %>
+      <div class="page-content">
+        <section class="panel">
+          <div class="supplies-toolbar">
+            <div>
+              <h2>Saída de Produtos</h2>
+              <p class="muted">Selecione os produtos e confirme a retirada da filial <%= filial %>.</p>
+            </div>
+            <a class="button-secondary" href="/entrada_estoque?filial=<%= filial %>">Voltar ao estoque</a>
+          </div>
+
+          <% if (success && success.length) { %>
+            <div class="request-notice request-notice-success" role="status"><%= success.join(' ') %></div>
+          <% } %>
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <form method="post" action="/saidas-produtos" data-withdrawal-form>
+            <input type="hidden" name="filial" value="<%= filial %>">
+            <input type="hidden" name="itens" value="[]" data-withdrawal-items>
+            <div class="request-items">
+              <div class="request-list" data-withdrawal-list></div>
+              <p class="muted" data-withdrawal-empty>Nenhum produto selecionado.</p>
+            </div>
+            <div class="supplies-actions">
+              <button class="button-primary" type="button" data-open-withdrawal-dialog <%= produtos.length ? '' : 'disabled' %>>Adicionar produto</button>
+              <button class="button-primary" type="submit" data-submit-withdrawal disabled>Confirmar saída</button>
+            </div>
+            <% if (!produtos.length) { %>
+              <p class="muted">Não há produtos ativos nesta filial.</p>
+            <% } %>
+          </form>
+
+          <dialog class="request-dialog" data-withdrawal-dialog>
+            <form method="dialog">
+              <h3>Adicionar produto à saída</h3>
+              <label>Produto
+                <select required data-withdrawal-select>
+                  <option value="">Selecione</option>
+                  <% produtos.forEach((produto) => { %>
+                    <option value="<%= produto.id %>" data-name="<%= produto.nome %>"><%= produto.nome %> - <%= produto.modelo || '-' %> - Qnt atual: <%= produto.quantidadeAtual %></option>
+                  <% }) %>
+                </select>
+              </label>
+              <label>Quantidade
+                <input type="number" min="1" step="1" value="1" required data-withdrawal-quantity>
+              </label>
+              <div class="supplies-actions">
+                <button class="button-primary" type="button" data-add-withdrawal-item>Adicionar</button>
+                <button class="button-secondary" type="button" data-close-withdrawal-dialog>Fechar</button>
+              </div>
+            </form>
+          </dialog>
+        </section>
+      </div>
+<script src="/js/saidas.js"></script>
+<%- include('partials/app-end') %>

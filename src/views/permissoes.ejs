@@ -3,8 +3,8 @@
         <section class="panel user-panel">
           <div class="supplies-toolbar">
             <div>
-              <h2>Permissões dos usuários</h2>
-              <p class="muted">As permissões de edição e exclusão exigem acesso à área correspondente.</p>
+              <h2>Usuários</h2>
+              <p class="muted">Consulte os acessos e edite permissões, senha e status de cada usuário.</p>
             </div>
             <a class="button-primary" href="/usuario/novo">Novo usuário</a>
           </div>
@@ -16,61 +16,120 @@
             <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
           <% } %>
 
+          <div class="table-toolbar">
+            <label class="search-box"><span>Buscar usuário</span><input id="buscarUsuario" type="search" placeholder="Nome ou login"></label>
+          </div>
           <div class="table-scroll">
-            <table>
+            <table class="users-table">
               <thead>
                 <tr>
                   <th>Nome</th>
-                  <th>Usuário</th>
+                  <th>Login</th>
+                  <th>Admin</th>
                   <th>Estoque</th>
-                  <th>Estoque Editar/cadastrar</th>
-                  <th>Estoque Desativar</th>
+                  <th>Req. estoque</th>
                   <th>Suprimentos</th>
-                  <th>Suprimentos Editar/cadastrar</th>
-                  <th>Suprimentos Desativar</th>
                   <th>Requisições</th>
-                  <th>Administração</th>
-                  <th>Filial 1</th>
-                  <th>Filial 3</th>
-                  <th>Filial 4</th>
+                  <th>Filiais</th>
+                  <th>Status</th>
                   <th>Ação</th>
                 </tr>
               </thead>
               <tbody>
                 <% usuarios.forEach((conta) => { %>
-                  <tr>
+                  <tr data-user-row>
+                    <td><%= conta.nome %></td>
+                    <td><%= conta.usuario %></td>
                     <td>
-                      <%= conta.nome %><%= conta.administrador ? ' (administrador principal)' : '' %>
-                      <% if (!conta.administrador) { %>
-                        <form id="permissoes-<%= conta._id %>" method="post" action="/usuario/permissoes/<%= conta._id %>"></form>
+                      <% if (conta.administrador) { %>
+                        Master
+                      <% } else { %>
+                        <%= conta.permissoes.administracao ? 'Sim' : 'Não' %>
                       <% } %>
                     </td>
-                    <td><%= conta.usuario %></td>
-                    <% if (conta.administrador) { %>
-                      <td colspan="12">Acesso completo a todas as áreas e filiais; conta protegida.</td>
-                    <% } else { %>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[estoque]" <%= conta.permissoes.estoque ? 'checked' : '' %> aria-label="Permitir estoque para <%= conta.nome %>"></td>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[estoqueEditar]" <%= (conta.permissoes.estoqueEditar ?? conta.permissoes.estoque) ? 'checked' : '' %> aria-label="Permitir editar e cadastrar estoque para <%= conta.nome %>"></td>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[estoqueExcluir]" <%= (conta.permissoes.estoqueExcluir ?? conta.permissoes.estoque) ? 'checked' : '' %> aria-label="Permitir excluir ou desativar estoque para <%= conta.nome %>"></td>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[suprimentos]" <%= conta.permissoes.suprimentos ? 'checked' : '' %> aria-label="Permitir suprimentos para <%= conta.nome %>"></td>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[suprimentosEditar]" <%= (conta.permissoes.suprimentosEditar ?? conta.permissoes.suprimentos) ? 'checked' : '' %> aria-label="Permitir editar e cadastrar suprimentos para <%= conta.nome %>"></td>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[suprimentosExcluir]" <%= (conta.permissoes.suprimentosExcluir ?? conta.permissoes.suprimentos) ? 'checked' : '' %> aria-label="Permitir excluir ou desativar suprimentos para <%= conta.nome %>"></td>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[requisicoes]" <%= conta.permissoes.requisicoes ? 'checked' : '' %> aria-label="Permitir requisições para <%= conta.nome %>"></td>
-                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[administracao]" <%= conta.permissoes.administracao ? 'checked' : '' %> aria-label="Permitir administração para <%= conta.nome %>"></td>
-                      <% [1, 3, 4].forEach((filial) => { %>
-                        <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="filiais" value="<%= filial %>" <%= conta.filiais.includes(filial) ? 'checked' : '' %> aria-label="Permitir filial <%= filial %> para <%= conta.nome %>"></td>
-                      <% }) %>
-                      <td><button form="permissoes-<%= conta._id %>" class="button-primary" type="submit">Salvar</button></td>
-                    <% } %>
+                    <td><%= conta.administrador || conta.permissoes.estoque ? 'Ativo' : 'Inativo' %></td>
+                    <td><%= conta.administrador || conta.permissoes.estoqueRequisicoes ? 'Ativo' : 'Inativo' %></td>
+                    <td><%= conta.administrador || conta.permissoes.suprimentos ? 'Ativo' : 'Inativo' %></td>
+                    <td><%= conta.administrador || conta.permissoes.requisicoes ? 'Ativo' : 'Inativo' %></td>
+                    <td>
+                      <% if (conta.administrador) { %>
+                        Todas
+                      <% } else if (conta.filiais.length) { %>
+                        <%= conta.filiais.map((filial) => `Filial ${filial}`).join(', ') %>
+                      <% } else { %>
+                        Nenhuma
+                      <% } %>
+                    </td>
+                    <td><span class="user-status <%= conta.ativo ? 'user-status-active' : 'user-status-inactive' %>"><%= conta.ativo ? 'Ativo' : 'Desativado' %></span></td>
+                    <td>
+                      <% if (conta.administrador) { %>
+                        <span class="muted">Protegido</span>
+                      <% } else { %>
+                        <button class="button-primary" type="button" data-edit-user="<%= conta._id %>" aria-expanded="false" aria-controls="edit-user-<%= conta._id %>">Editar</button>
+                      <% } %>
+                    </td>
                   </tr>
+                  <% if (!conta.administrador) { %>
+                    <tr id="edit-user-<%= conta._id %>" class="user-edit-row" data-user-edit-row hidden>
+                      <td colspan="10">
+                        <div class="user-edit-panel">
+                          <h3>Editar <%= conta.nome %> (<%= conta.usuario %>)</h3>
+                          <div class="user-edit-grid">
+                            <form method="post" action="/usuario/permissoes/<%= conta._id %>" class="user-permissions-form">
+                              <fieldset class="permissions-fieldset user-edit-fieldset">
+                                <legend>Acessos e permissões</legend>
+                                <label><input type="checkbox" name="permissoes[estoque]" <%= conta.permissoes.estoque ? 'checked' : '' %>> Estoque</label>
+                                <label><input type="checkbox" name="permissoes[estoqueEditar]" <%= (conta.permissoes.estoqueEditar ?? conta.permissoes.estoque) ? 'checked' : '' %>> Cadastrar/editar estoque</label>
+                                <label><input type="checkbox" name="permissoes[estoqueExcluir]" <%= (conta.permissoes.estoqueExcluir ?? conta.permissoes.estoque) ? 'checked' : '' %>> Desativar estoque</label>
+                                <label><input type="checkbox" name="permissoes[estoqueRequisicoes]" <%= conta.permissoes.estoqueRequisicoes ? 'checked' : '' %>> Requisições de estoque</label>
+                                <label><input type="checkbox" name="permissoes[suprimentos]" <%= conta.permissoes.suprimentos ? 'checked' : '' %>> Suprimentos</label>
+                                <label><input type="checkbox" name="permissoes[suprimentosEditar]" <%= (conta.permissoes.suprimentosEditar ?? conta.permissoes.suprimentos) ? 'checked' : '' %>> Cadastrar/editar suprimentos</label>
+                                <label><input type="checkbox" name="permissoes[suprimentosExcluir]" <%= (conta.permissoes.suprimentosExcluir ?? conta.permissoes.suprimentos) ? 'checked' : '' %>> Desativar suprimentos</label>
+                                <label><input type="checkbox" name="permissoes[requisicoes]" <%= conta.permissoes.requisicoes ? 'checked' : '' %>> Requisições</label>
+                                <label><input type="checkbox" name="permissoes[administracao]" <%= conta.permissoes.administracao ? 'checked' : '' %>> Administração</label>
+                              </fieldset>
+                              <fieldset class="permissions-fieldset user-edit-fieldset">
+                                <legend>Filiais permitidas</legend>
+                                <% [1, 3, 4].forEach((filial) => { %>
+                                  <label><input type="checkbox" name="filiais" value="<%= filial %>" <%= conta.filiais.includes(filial) ? 'checked' : '' %>> Filial <%= filial %></label>
+                                <% }) %>
+                              </fieldset>
+                              <div class="user-edit-actions">
+                                <button class="button-primary" type="submit">Salvar permissões</button>
+                              </div>
+                            </form>
+
+                            <div class="user-management-actions">
+                              <form method="post" action="/usuario/permissoes/<%= conta._id %>/senha" class="user-management-form">
+                                <label>Nova senha<input type="password" name="senha" minlength="8" maxlength="72" autocomplete="new-password" required></label>
+                                <button class="button-primary" type="submit">Alterar senha</button>
+                              </form>
+                              <form method="post" action="/usuario/permissoes/<%= conta._id %>/status" class="user-management-form">
+                                <input type="hidden" name="ativo" value="<%= conta.ativo ? 'false' : 'true' %>">
+                                <p>Status atual: <strong><%= conta.ativo ? 'Ativo' : 'Desativado' %></strong></p>
+                                <button class="<%= conta.ativo ? 'button-danger' : 'button-primary' %>" type="submit"><%= conta.ativo ? 'Desativar usuário' : 'Ativar usuário' %></button>
+                              </form>
+                              <% if (usuario.administrador) { %>
+                                <form method="post" action="/usuario/permissoes/<%= conta._id %>/codigo-seguranca" class="user-management-form">
+                                  <p>Código de segurança visível somente ao administrador master.</p>
+                                  <button class="button-secondary" type="submit">Gerar novo código</button>
+                                </form>
+                              <% } %>
+                            </div>
+                          </div>
+                          <button class="button-secondary user-edit-close" type="button" data-close-user="<%= conta._id %>">Fechar edição</button>
+                        </div>
+                      </td>
+                    </tr>
+                  <% } %>
                 <% }) %>
                 <% if (!usuarios.length) { %>
-                  <tr><td class="empty-state" colspan="14">Nenhum usuário cadastrado.</td></tr>
+                  <tr><td class="empty-state" colspan="10">Nenhum usuário cadastrado.</td></tr>
                 <% } %>
               </tbody>
             </table>
           </div>
-          <p class="muted">Cada usuário precisa ter pelo menos uma filial. As alterações passam a valer nas próximas solicitações e páginas carregadas.</p>
         </section>
       </div>
+<script src="/js/usuario.js"></script>
 <%- include('partials/app-end') %>

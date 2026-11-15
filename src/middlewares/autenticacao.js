@@ -6,15 +6,21 @@ const autenticar = async (req, res, next) => {
   }
 
   try {
-    const usuario = await Usuario.findOne({
-      _id: req.session.usuarioId,
-      ativo: true
-    }).select('nome usuario permissoes filiais administrador');
+    const usuario = await Usuario.findById(req.session.usuarioId)
+      .select('nome usuario permissoes filiais administrador ativo');
 
     if (!usuario) {
       return req.session.destroy((error) => {
         if (error) return next(error);
         res.clearCookie('connect.sid');
+        res.redirect('/login');
+      });
+    }
+    if (!usuario.ativo) {
+      req.flash('error', 'Sua conta foi desativada e não pode acessar o sistema.');
+      delete req.session.usuarioId;
+      return req.session.save((error) => {
+        if (error) return next(error);
         res.redirect('/login');
       });
     }
@@ -38,10 +44,13 @@ const validarFilial = (req, res, next) => {
     '/excluir_estoque',
     '/suprimentos',
     '/suprimentos/relatorio',
-    '/requisicoes-suprimentos'
+    '/requisicoes-suprimentos',
+    '/requisicoes-estoque',
+    '/saidas-produtos',
+    '/saidas-suprimentos'
   ]);
   const rotaComFilial = rotasComFilial.has(req.path)
-    || ['/entrada_estoque/', '/editar_estoque/', '/adicionar_estoque/', '/excluir_estoque/', '/suprimentos/']
+    || ['/entrada_estoque/', '/editar_estoque/', '/adicionar_estoque/', '/excluir_estoque/', '/suprimentos/', '/requisicoes-estoque/', '/saidas-produtos/', '/saidas-suprimentos/']
       .some((prefixo) => req.path.startsWith(prefixo));
   if (!rotaComFilial) return next();
 

@@ -8,6 +8,7 @@ const permissoesSchema = new mongoose.Schema({
   suprimentosEditar: { type: Boolean, default: undefined },
   suprimentosExcluir: { type: Boolean, default: undefined },
   requisicoes: { type: Boolean, default: false },
+  estoqueRequisicoes: { type: Boolean, default: false },
   administracao: { type: Boolean, default: false }
 }, { _id: false });
 

@@ -147,6 +147,23 @@ table {
   margin-top: 32px;
 }
 
+.withdrawal-period-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.withdrawal-period-form {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.withdrawal-period-form .search-box input {
+  width: auto;
+}
+
 .request-detail-dialog {
   width: min(850px, calc(100vw - 32px));
   max-height: 90vh;
@@ -239,6 +256,15 @@ table {
 
   .supplies-fields {
     grid-template-columns: 1fr;
+  }
+
+  .withdrawal-period-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .withdrawal-period-form .search-box input {
+    width: 100%;
   }
 
   .request-item-row {
