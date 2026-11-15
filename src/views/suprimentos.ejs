@@ -1,0 +1,101 @@
+<%- include('partials/app-start', { title, activePage: 'suprimentos' }) %>
+      <div class="page-content">
+        <section class="panel">
+          <%# Cabeçalho da página e ação que abre o formulário de cadastro. %>
+          <div class="supplies-toolbar">
+            <div>
+              <h2>Suprimentos</h2>
+              <p class="muted">Cadastro e controle de suprimentos da filial <%= filial %>.</p>
+            </div>
+            <% if (usuario.administrador || (permissoes.suprimentosEditar ?? permissoes.suprimentos)) { %>
+              <button class="button-primary" id="novoSuprimento" type="button">Novo suprimento</button>
+            <% } %>
+          </div>
+
+          <% if (success && success.length) { %>
+            <div class="request-notice request-notice-success" role="status"><%= success.join(' ') %></div>
+          <% } %>
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <%# Formulário de criação; a filial atual é enviada sem permitir alteração aqui. %>
+          <% if (usuario.administrador || (permissoes.suprimentosEditar ?? permissoes.suprimentos)) { %>
+            <form class="supplies-form" id="formNovoSuprimento" method="post" action="/suprimentos" hidden>
+            <h3>Novo suprimento</h3>
+            <input type="hidden" name="filial" value="<%= filial %>">
+            <%- include('partials/suprimento-fields', { suprimento: null }) %>
+            <div class="supplies-actions">
+              <button class="button-primary" type="submit">Adicionar</button>
+              <button class="button-secondary" type="button" data-close-form>Cancelar</button>
+            </div>
+            </form>
+          <% } %>
+
+          <%# Campo de busca e tabela dos suprimentos ativos retornados pelo controller. %>
+          <div class="table-toolbar">
+            <label class="search-box"><span>Buscar</span><input id="buscarSuprimento" type="search" placeholder="Nome, impressora ou tipo"></label>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th><th>Impressora</th><th>Tipo</th><th>Atual</th><th>Mínimo</th><th>Pendente</th><th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (suprimentos.length) { %>
+                  <% suprimentos.forEach((suprimento) => { %>
+                    <%# Cada linha tem ações e uma linha de edição associada ao ID do registro. %>
+                    <tr data-supply-row>
+                      <td><%= suprimento.nome %></td>
+                      <td><%= suprimento.impressora || '-' %></td>
+                      <td><%= suprimento.tipo || '-' %></td>
+                      <td><%= suprimento.quantidadeAtual %></td>
+                      <td><%= suprimento.quantidadeMinima %></td>
+                      <td><%= suprimento.quantidadePendente %></td>
+                      <td>
+                        <% if (usuario.administrador || (permissoes.suprimentosEditar ?? permissoes.suprimentos)) { %>
+                          <button class="button-primary supplies-edit-button" type="button" data-edit="<%= suprimento.id %>">Editar</button>
+                        <% } %>
+                        <% if (usuario.administrador || (permissoes.suprimentosExcluir ?? permissoes.suprimentos)) { %>
+                          <form method="post" action="/suprimentos/<%= suprimento.id %>/desativar" class="supplies-inline-form">
+                            <input type="hidden" name="filial" value="<%= filial %>">
+                            <button class="button-danger" type="submit">Excluir</button>
+                          </form>
+                        <% } %>
+                        <% if (!usuario.administrador
+                          && !(permissoes.suprimentosEditar ?? permissoes.suprimentos)
+                          && !(permissoes.suprimentosExcluir ?? permissoes.suprimentos)) { %>-<% } %>
+                      </td>
+                    </tr>
+                    <% if (usuario.administrador || (permissoes.suprimentosEditar ?? permissoes.suprimentos)) { %>
+                    <tr id="edit-row-<%= suprimento.id %>" hidden>
+                      <td colspan="7">
+                        <form class="supplies-form supplies-edit-form" method="post" action="/suprimentos/<%= suprimento.id %>/editar">
+                          <h3>Editar <%= suprimento.nome %></h3>
+                          <input type="hidden" name="filial" value="<%= filial %>">
+                          <%- include('partials/suprimento-fields', { suprimento }) %>
+                          <div class="supplies-actions">
+                            <button class="button-primary" type="submit">Salvar</button>
+                            <button class="button-secondary" type="button" data-close-edit="<%= suprimento.id %>">Cancelar</button>
+                          </div>
+                        </form>
+                      </td>
+                    </tr>
+                    <% } %>
+                  <% }) %>
+                <% } else { %>
+                  <tr><td class="empty-state" colspan="7">Nenhum suprimento cadastrado nesta filial.</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+          <%# O relatório é baixado pela rota que recebe a filial selecionada. %>
+          <div class="supplies-report">
+            <a class="button-primary" href="/suprimentos/relatorio?filial=<%= filial %>">Baixar relatório TXT</a>
+          </div>
+        </section>
+      </div>
+<script src="/js/suprimentos.js"></script>
+<%- include('partials/app-end') %>

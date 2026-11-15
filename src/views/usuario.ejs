@@ -1,0 +1,31 @@
+<%- include('partials/app-start', { title, activePage }) %>
+      <div class="page-content">
+        <section class="panel user-panel">
+          <div class="supplies-toolbar">
+            <div>
+              <h2>Bem-vindo, <%= usuario.nome %></h2>
+              <p class="muted">Usuário: <%= usuario.usuario %></p>
+            </div>
+            <form method="post" action="/logout">
+              <button class="button-secondary" type="submit">Sair</button>
+            </form>
+          </div>
+
+          <% if (success && success.length) { %>
+            <div class="request-notice request-notice-success" role="status"><%= success.join(' ') %></div>
+          <% } %>
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <% if (usuario.administrador || permissoes.administracao) { %>
+            <h3>Administração</h3>
+            <div class="user-actions">
+              <a class="button-primary" href="/usuario/permissoes">Permissões</a>
+              <a class="button-primary" href="/usuario/novo">Novo usuário</a>
+              <a class="button-danger" href="/usuario/dados">Excluir dados do sistema</a>
+            </div>
+          <% } %>
+        </section>
+      </div>
+<%- include('partials/app-end') %>

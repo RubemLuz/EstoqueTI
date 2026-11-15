@@ -1,0 +1,24 @@
+<%- include('partials/app-start', { title, activePage: 'inicio' }) %>
+      <div class="page-content">
+        <!-- <section class="summary-section" aria-label="Resumo geral do estoque">
+          <div class="section-heading"><div><span class="eyebrow">Geral</span><h2>Todas as filiais</h2></div></div>
+          <div class="summary-grid">
+            <article class="summary-card"><span class="summary-label">Produtos diferentes</span><strong><%= resumoGeral.totalProdutos %></strong><small>Geral</small></article>
+            <article class="summary-card"><span class="summary-label">Unidades totais</span><strong><%= resumoGeral.totalUnidades %></strong><small>Quantidade atual geral</small></article>
+            <article class="summary-card"><span class="summary-label">Itens abaixo do mínimo</span><strong><%= resumoGeral.abaixoMinimo %></strong><small>Exigem atenção</small></article>
+          </div>
+        </section> -->
+          <section class="summary-section" aria-label="Resumo da filial <%= filialSelecionada %>">
+            <div class="section-heading"><div><span class="eyebrow">Filial <%= filialSelecionada %></span><h2>Estoque da filial <%= filialSelecionada %></h2></div></div>
+            <div class="summary-grid">
+              <article class="summary-card"><span class="summary-label">Produtos diferentes</span><strong><%= resumoFilialSelecionada.totalProdutos %></strong><small>Filial <%= filialSelecionada %></small></article>
+              <article class="summary-card"><span class="summary-label">Unidades totais</span><strong><%= resumoFilialSelecionada.totalUnidades %></strong><small>Quantidade atual</small></article>
+              <article class="summary-card"><span class="summary-label">Itens abaixo do mínimo</span><strong><%= resumoFilialSelecionada.abaixoMinimo %></strong><small>Exigem atenção</small></article>
+            </div>
+          </section>
+        <section class="notice-section">
+          <div class="section-heading"><div><span class="eyebrow">Atualizações</span><h2>Quadros de avisos</h2></div></div>
+          <div class="notice-card"><span class="notice-icon">!</span><div><strong>Nenhum aviso no momento</strong><p>Os avisos de estoque serão exibidos aqui.</p></div></div>
+        </section>
+      </div>
+<%- include('partials/app-end') %>

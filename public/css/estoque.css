@@ -1,0 +1,268 @@
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #697386;
+  font-weight: 700;
+}
+
+.search-box input,
+#filialConsulta {
+  width: 100%;
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* Estrutura visual das ferramentas e formulários da página de suprimentos. */
+.supplies-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.supplies-toolbar h2 {
+  margin-bottom: 4px;
+}
+
+.supplies-toolbar p {
+  margin: 0;
+}
+
+.supplies-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.supplies-fields label {
+  color: #697386;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.supplies-fields input {
+  width: 100%;
+  margin-top: 7px;
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.supplies-form {
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid #dfe4eb;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.supplies-actions,
+.supplies-inline-form {
+  display: inline-flex;
+  gap: 8px;
+}
+
+/* Posicionamento do link de download do relatório. */
+.supplies-report {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.supplies-report .button-primary {
+  text-decoration: none;
+}
+
+.request-items {
+  margin: 18px 0;
+}
+
+.request-list {
+  display: grid;
+  gap: 10px;
+}
+
+.request-item-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid #dfe4eb;
+  border-radius: 8px;
+}
+
+.request-dialog {
+  width: min(520px, calc(100vw - 32px));
+  border: 0;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 18px 50px rgb(23 32 51 / 25%);
+}
+
+.request-dialog::backdrop {
+  background: rgb(23 32 51 / 55%);
+}
+
+.request-dialog label {
+  display: block;
+  margin-bottom: 16px;
+  color: #697386;
+  font-weight: 700;
+}
+
+.request-dialog select,
+.request-dialog input {
+  width: 100%;
+  margin-top: 7px;
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.request-history {
+  margin-top: 32px;
+}
+
+.request-detail-dialog {
+  width: min(850px, calc(100vw - 32px));
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.request-detail-dialog h3 {
+  margin-top: 0;
+}
+
+.request-detail-dialog .request-quantity {
+  width: 110px;
+  margin: 0;
+}
+
+.request-dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.request-detail-dialog [data-delete-request] {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.request-status {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.request-status-pending {
+  color: #825b00;
+  background: #fff3cd;
+}
+
+.request-status-received {
+  color: #17613a;
+  background: #d9f2e3;
+}
+
+.request-notice {
+  margin-top: 18px;
+  border-radius: 7px;
+  padding: 12px 14px;
+}
+
+.request-notice-success {
+  color: #17613a;
+  background: #d9f2e3;
+}
+
+.request-notice-error {
+  color: #8d2424;
+  background: #fde2e2;
+}
+
+.button-secondary {
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 11px 18px;
+  color: #697386;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.button-danger {
+  border: 0;
+  border-radius: 7px;
+  padding: 11px 18px;
+  color: #fff;
+  background: #c62828;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .supplies-toolbar,
+  .supplies-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .supplies-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .request-item-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+th,
+td {
+  min-width: 120px;
+  padding: 12px;
+  border-bottom: 1px solid #e6e9ee;
+  text-align: left;
+}
+
+th {
+  color: #697386;
+  background: #f7f8fa;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.empty-state {
+  height: 160px;
+  color: #8a91a0;
+  text-align: center;
+}

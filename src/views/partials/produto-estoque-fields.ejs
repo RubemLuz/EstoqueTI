@@ -1,0 +1,10 @@
+<div class="fields-grid">
+  <label>Nome<input name="nome" value="<%= produto ? produto.nome : '' %>" required></label>
+  <label>Modelo<input name="modelo" value="<%= produto ? produto.modelo || '' : '' %>"></label>
+  <label>Informação extra<input name="informacaoExtra" value="<%= produto ? produto.informacaoExtra || '' : '' %>"></label>
+  <label>Categoria<input name="categoria" value="<%= produto ? produto.categoria || '' : '' %>"></label>
+  <label>Quantidade atual<input name="quantidadeAtual" type="number" min="0" value="<%= produto ? produto.quantidadeAtual : 0 %>" required></label>
+  <label>Quantidade mínima<input name="quantidadeMinima" type="number" min="0" value="<%= produto ? produto.quantidadeMinima : 0 %>" required></label>
+  <label>Quantidade pendente<input name="quantidadePendente" type="number" min="0" value="<%= produto ? produto.quantidadePendente : 0 %>" required></label>
+  <label class="full-field">Observação<textarea name="observacao" rows="3"><%= produto ? produto.observacao || '' : '' %></textarea></label>
+</div>

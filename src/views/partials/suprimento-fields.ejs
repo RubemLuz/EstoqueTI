@@ -1,0 +1,10 @@
+<div class="supplies-fields">
+  <%# Campos reutilizados nos formulários de criação e edição de suprimentos. %>
+  <label>Nome<input name="nome" value="<%= suprimento ? suprimento.nome : '' %>" required></label>
+  <label>Impressora<input name="impressora" value="<%= suprimento ? suprimento.impressora || '' : '' %>"></label>
+  <label>Tipo<input name="tipo" value="<%= suprimento ? suprimento.tipo || '' : '' %>"></label>
+  <label>Quantidade atual<input name="quantidadeAtual" type="number" min="0" value="<%= suprimento ? suprimento.quantidadeAtual : 0 %>" required></label>
+  <label>Quantidade mínima<input name="quantidadeMinima" type="number" min="0" value="<%= suprimento ? suprimento.quantidadeMinima : 0 %>" required></label>
+  <%# A quantidade pendente é controlada pelo fluxo de requisições, não por este formulário. %>
+  <!-- <label>Quantidade pendente<input name="quantidadePendente" type="number" min="0" value="<%= suprimento ? suprimento.quantidadePendente : 0 %>" required></label> -->
+</div>

@@ -1,0 +1,34 @@
+<%- include('partials/app-start', { title, activePage }) %>
+      <div class="page-content">
+        <section class="panel user-panel danger-panel">
+          <h2>Excluir dados operacionais</h2>
+          <p>Esta ação apagará permanentemente todos os registros de:</p>
+          <ul>
+            <li>Estoque</li>
+            <li>Suprimentos</li>
+            <li>Requisições de suprimentos</li>
+          </ul>
+          <p><strong>As contas de usuário, sessões e o banco MongoDB serão preservados.</strong></p>
+          <p class="muted">A operação só será concluída se o banco permitir uma transação atômica.</p>
+
+          <% if (success && success.length) { %>
+            <div class="request-notice request-notice-success" role="status"><%= success.join(' ') %></div>
+          <% } %>
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <form method="post" action="/usuario/dados/excluir" data-delete-operational-data>
+            <label class="confirmation-label">
+              Para confirmar, digite <strong>EXCLUIR DADOS</strong>
+              <input name="confirmacao" autocomplete="off" required>
+            </label>
+            <div class="user-actions">
+              <button class="button-danger" type="submit">Excluir estoque, suprimentos e requisições</button>
+              <a class="button-secondary" href="/usuario">Cancelar</a>
+            </div>
+          </form>
+        </section>
+      </div>
+<script src="/js/usuario.js"></script>
+<%- include('partials/app-end') %>

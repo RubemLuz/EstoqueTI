@@ -1,0 +1,42 @@
+<%- include('partials/app-start', { title, activePage }) %>
+      <div class="page-content">
+        <section class="panel user-panel">
+          <h2>Novo usuário</h2>
+          <p class="muted">A senha e o código de segurança serão armazenados usando bcrypt.</p>
+
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <form method="post" action="/usuario/novo">
+            <div class="fields-grid">
+              <label>Nome<input name="nome" minlength="2" maxlength="80" required></label>
+              <label>Usuário<input name="usuario" minlength="3" maxlength="30" pattern="[a-zA-Z0-9._-]+" autocomplete="username" required></label>
+              <label>Senha<input name="senha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></label>
+              <label>Código de segurança<input name="codigoSeguranca" type="password" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="off" required></label>
+            </div>
+            <fieldset class="permissions-fieldset">
+              <legend>Permissões iniciais</legend>
+              <label><input type="checkbox" name="permissoes[estoque]"> Estoque</label>
+              <label><input type="checkbox" name="permissoes[estoqueEditar]"> Editar/cadastrar estoque</label>
+              <label><input type="checkbox" name="permissoes[estoqueExcluir]"> Excluir/desativar estoque</label>
+              <label><input type="checkbox" name="permissoes[suprimentos]"> Suprimentos</label>
+              <label><input type="checkbox" name="permissoes[suprimentosEditar]"> Editar/cadastrar suprimentos</label>
+              <label><input type="checkbox" name="permissoes[suprimentosExcluir]"> Excluir/desativar suprimentos</label>
+              <label><input type="checkbox" name="permissoes[requisicoes]"> Requisições</label>
+              <label><input type="checkbox" name="permissoes[administracao]"> Administração</label>
+            </fieldset>
+            <fieldset class="permissions-fieldset">
+              <legend>Filiais permitidas (selecione pelo menos uma)</legend>
+              <label><input type="checkbox" name="filiais" value="1"> Filial 1</label>
+              <label><input type="checkbox" name="filiais" value="3"> Filial 3</label>
+              <label><input type="checkbox" name="filiais" value="4"> Filial 4</label>
+            </fieldset>
+            <div class="user-actions">
+              <button class="button-primary" type="submit">Criar usuário</button>
+              <a class="button-secondary" href="/usuario">Cancelar</a>
+            </div>
+          </form>
+        </section>
+      </div>
+<%- include('partials/app-end') %>

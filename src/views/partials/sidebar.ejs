@@ -1,0 +1,21 @@
+<aside class="sidebar" id="sidebar" aria-label="Menu principal">
+  <div class="sidebar-header">
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Recolher menu" aria-expanded="true">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="brand"><span class="brand-mark">ET</span><strong>Estoque TI</strong></div>
+  </div>
+  <nav class="sidebar-menu" id="sidebarMenu">
+    <% if (usuario.administrador || permissoes.estoque) { %>
+      <a class="menu-link <%= activePage === 'inicio' ? 'active' : '' %>" href="/"><span class="menu-icon">&#8962;</span><span>Início</span></a>
+      <a class="menu-link <%= activePage === 'entrada' ? 'active' : '' %>" href="/entrada_estoque"><span class="menu-icon">&#9638;</span><span>Estoque</span></a>
+    <% } %>
+    <% if (usuario.administrador || permissoes.suprimentos) { %>
+      <a class="menu-link <%= activePage === 'suprimentos' ? 'active' : '' %>" href="/suprimentos"><span class="menu-icon">&#9783;</span><span>Suprimentos</span></a>
+    <% } %>
+    <% if (usuario.administrador || permissoes.requisicoes) { %>
+      <a class="menu-link <%= activePage === 'requisicoes' ? 'active' : '' %>" href="/requisicoes-suprimentos"><span class="menu-icon">&#9993;</span><span>Requisições</span></a>
+    <% } %>
+  </nav>
+  <button class="account-button" id="accountButton" type="button"><span class="menu-icon">&#128100;</span><span>Minha conta</span></button>
+</aside>

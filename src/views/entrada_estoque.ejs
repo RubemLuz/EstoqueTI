@@ -1,0 +1,100 @@
+<%- include('partials/app-start', { title, activePage: 'entrada' }) %>
+      <div class="page-content">
+        <section class="panel">
+          <div class="supplies-toolbar">
+            <div>
+              <h2>Estoque</h2>
+              <p class="muted">Cadastro e controle dos produtos da filial <%= filial %>.</p>
+            </div>
+            <% if (usuario.administrador || (permissoes.estoqueEditar ?? permissoes.estoque)) { %>
+              <button class="button-primary" id="novoProduto" type="button">Novo produto</button>
+            <% } %>
+          </div>
+
+          <% if (success && success.length) { %>
+            <div class="request-notice request-notice-success" role="status"><%= success.join(' ') %></div>
+          <% } %>
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <% if (usuario.administrador || (permissoes.estoqueEditar ?? permissoes.estoque)) { %>
+            <form class="supplies-form" id="formNovoProduto" method="post" action="/entrada_estoque" hidden>
+              <h3>Novo produto</h3>
+              <input type="hidden" name="filial" value="<%= filial %>">
+              <%- include('partials/produto-estoque-fields', { produto: null }) %>
+              <div class="supplies-actions">
+                <button class="button-primary" type="submit">Adicionar</button>
+                <button class="button-secondary" type="button" data-close-new-product>Cancelar</button>
+              </div>
+            </form>
+          <% } %>
+
+          <div class="table-toolbar">
+            <label class="search-box"><span>Buscar</span><input id="buscarProdutoEstoque" type="search" placeholder="Nome, modelo ou categoria"></label>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>Nome</th><th>Modelo</th><th>Informação extra</th><th>Categoria</th>
+                <th>Quantidade atual</th><th>Quantidade mínima</th><th>Pendente</th>
+                <th>Última edição</th><th>Criado em</th><th>Observação</th><th>Ações</th>
+              </tr></thead>
+              <tbody>
+                <% if (itens.length) { %>
+                  <% itens.forEach((item) => { %>
+                    <tr data-stock-row>
+                      <td><%= item.nome %></td>
+                      <td><%= item.modelo || '-' %></td>
+                      <td><%= item.informacaoExtra || '-' %></td>
+                      <td><%= item.categoria || '-' %></td>
+                      <td><%= item.quantidadeAtual %></td>
+                      <td><%= item.quantidadeMinima %></td>
+                      <td><%= item.quantidadePendente %></td>
+                      <td><%= item.dataUltimaEdicao ? item.dataUltimaEdicao.toLocaleString('pt-BR') : '-' %></td>
+                      <td><%= item.dataCriacao ? item.dataCriacao.toLocaleString('pt-BR') : '-' %></td>
+                      <td><%= item.observacao || '-' %></td>
+                      <td>
+                        <% if (usuario.administrador || (permissoes.estoqueEditar ?? permissoes.estoque)) { %>
+                          <button class="button-primary" type="button" data-edit-product="<%= item.id %>">Editar</button>
+                        <% } %>
+                        <% if (usuario.administrador || (permissoes.estoqueExcluir ?? permissoes.estoque)) { %>
+                          <form method="post" action="/entrada_estoque/<%= item.id %>/desativar" class="supplies-inline-form" data-deactivate-product>
+                            <input type="hidden" name="filial" value="<%= filial %>">
+                            <button class="button-danger" type="submit">Excluir</button>
+                          </form>
+                        <% } %>
+                        <% if (!usuario.administrador
+                          && !(permissoes.estoqueEditar ?? permissoes.estoque)
+                          && !(permissoes.estoqueExcluir ?? permissoes.estoque)) { %>-<% } %>
+                      </td>
+                    </tr>
+                    <% if (usuario.administrador || (permissoes.estoqueEditar ?? permissoes.estoque)) { %>
+                      <tr id="edit-product-row-<%= item.id %>" hidden>
+                        <td colspan="11">
+                          <form class="supplies-form" method="post" action="/entrada_estoque/<%= item.id %>/editar">
+                            <h3>Editar <%= item.nome %></h3>
+                            <input type="hidden" name="filial" value="<%= filial %>">
+                            <%- include('partials/produto-estoque-fields', { produto: item }) %>
+                            <div class="supplies-actions">
+                              <button class="button-primary" type="submit">Salvar alterações</button>
+                              <button class="button-secondary" type="button" data-close-edit-product="<%= item.id %>">Cancelar</button>
+                            </div>
+                          </form>
+                        </td>
+                      </tr>
+                    <% } %>
+                  <% }) %>
+                <% } else { %>
+                  <tr><td colspan="11" class="empty-state">Nenhum produto ativo cadastrado.</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+          <div class="supplies-report">
+            <a class="button-primary" href="/entrada_estoque/relatorio?filial=<%= filial %>">Baixar relatório TXT</a>
+          </div>
+        </section>
+      </div>
+<script src="/js/estoque.js"></script>
+<%- include('partials/app-end') %>

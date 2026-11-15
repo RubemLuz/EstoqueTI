@@ -1,0 +1,12 @@
+<header class="topbar">
+  <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  <h1><%= title %></h1>
+  <label class="branch-selector">
+    Filial
+    <select id="filialSelecionada">
+      <% filiaisPermitidas.forEach((numero) => { %>
+        <option value="<%= numero %>" <%= filial === numero ? 'selected' : '' %>>Filial <%= numero %></option>
+      <% }) %>
+    </select>
+  </label>
+</header>

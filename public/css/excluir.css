@@ -1,0 +1,39 @@
+#filialExclusao {
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.product-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px solid #e1e5eb;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.stock-status {
+  display: block;
+  margin-top: 6px;
+  color: #697386;
+  font-size: 13px;
+}
+
+.stock-status-alert {
+  color: #c62828;
+  font-weight: 700;
+}
+
+.empty-state-box {
+  margin-top: 20px;
+  padding: 48px 20px;
+  border: 1px dashed #ccd3dc;
+  border-radius: 9px;
+  color: #858c99;
+  text-align: center;
+}

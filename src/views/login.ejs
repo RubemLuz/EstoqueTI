@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body class="login-page">
+  <main class="login-container">
+    <form class="login-card" method="post" action="/login">
+      <div class="login-brand"><span class="brand-mark">ET</span></div>
+      <h1>Estocagem TI</h1>
+      <p>Acesse sua conta</p>
+      <% if (error && error.length) { %>
+        <div class="login-error" role="alert"><%= error.join(' ') %></div>
+      <% } %>
+      <label>Usuário<input type="text" name="usuario" autocomplete="username" required></label>
+      <label>Senha<input type="password" name="senha" autocomplete="current-password" required></label>
+      <label>Código de segurança<input type="password" name="codigoSeguranca" inputmode="numeric" autocomplete="one-time-code" required></label>
+      <button class="button-primary login-submit" type="submit">Entrar</button>
+    </form>
+  </main>
+</body>
+</html>

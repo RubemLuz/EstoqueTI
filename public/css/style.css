@@ -1,0 +1,254 @@
+:root {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #172033;
+  background: #f4f6f8;
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 76px;
+  --navy: #172033;
+  --blue: #1769aa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  transition: grid-template-columns .25s ease;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #fff;
+  background: var(--navy);
+  box-shadow: 4px 0 18px rgb(23 32 51 / 12%);
+}
+
+.sidebar-header {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+.menu-toggle,
+.mobile-menu-button {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: rgb(255 255 255 / 9%);
+}
+
+.menu-toggle span,
+.mobile-menu-button span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin: 4px auto;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.brand {
+  min-width: 155px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #3196e8;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.sidebar-menu {
+  padding: 16px 10px;
+}
+
+.menu-link,
+.account-button {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 5px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 8px;
+  color: #cbd3e3;
+  text-decoration: none;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  font: inherit;
+}
+
+.menu-link:hover,
+.menu-link.active {
+  color: #fff;
+  background: #246fa3;
+}
+
+.menu-icon {
+  width: 22px;
+  flex: 0 0 22px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.account-button {
+  margin-top: auto;
+  margin-bottom: 14px;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 0;
+}
+
+.main-content {
+  min-width: 0;
+  background: #f4f6f8;
+}
+
+.topbar {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 32px;
+  border-bottom: 1px solid #dde2e8;
+  background: #fff;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.branch-selector {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #697386;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.branch-selector select {
+  min-width: 105px;
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 9px 12px;
+  color: #172033;
+  background: #fff;
+  font: inherit;
+}
+
+.mobile-menu-button {
+  display: none;
+  background: var(--navy);
+}
+
+.page-content {
+  padding: 28px 32px 48px;
+}
+
+.panel {
+  padding: 24px;
+  border: 1px solid #e1e5eb;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgb(23 32 51 / 5%);
+}
+
+.panel h2 {
+  margin: 4px 0 0;
+}
+
+.muted {
+  color: #7c8493;
+}
+
+.button-primary {
+  border: 0;
+  border-radius: 7px;
+  padding: 11px 18px;
+  color: #fff;
+  background: var(--blue);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.button-primary:hover {
+  background: #104d80;
+}
+
+.sidebar-collapsed {
+  grid-template-columns: var(--sidebar-collapsed) minmax(0, 1fr);
+}
+
+.sidebar-collapsed .brand strong,
+.sidebar-collapsed .menu-link span:last-child,
+.sidebar-collapsed .account-button span:last-child {
+  display: none;
+}
+
+.sidebar-collapsed .brand {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .app-shell,
+  .sidebar-collapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    transform: translateX(-100%);
+    width: min(280px, 86vw);
+    transition: transform .25s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .topbar {
+    padding: 0 18px;
+  }
+
+  .page-content {
+    padding: 20px 16px 40px;
+  }
+}

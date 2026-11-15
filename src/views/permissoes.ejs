@@ -1,0 +1,76 @@
+<%- include('partials/app-start', { title, activePage }) %>
+      <div class="page-content">
+        <section class="panel user-panel">
+          <div class="supplies-toolbar">
+            <div>
+              <h2>Permissões dos usuários</h2>
+              <p class="muted">As permissões de edição e exclusão exigem acesso à área correspondente.</p>
+            </div>
+            <a class="button-primary" href="/usuario/novo">Novo usuário</a>
+          </div>
+
+          <% if (success && success.length) { %>
+            <div class="request-notice request-notice-success" role="status"><%= success.join(' ') %></div>
+          <% } %>
+          <% if (error && error.length) { %>
+            <div class="request-notice request-notice-error" role="alert"><%= error.join(' ') %></div>
+          <% } %>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Usuário</th>
+                  <th>Estoque</th>
+                  <th>Estoque Editar/cadastrar</th>
+                  <th>Estoque Desativar</th>
+                  <th>Suprimentos</th>
+                  <th>Suprimentos Editar/cadastrar</th>
+                  <th>Suprimentos Desativar</th>
+                  <th>Requisições</th>
+                  <th>Administração</th>
+                  <th>Filial 1</th>
+                  <th>Filial 3</th>
+                  <th>Filial 4</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% usuarios.forEach((conta) => { %>
+                  <tr>
+                    <td>
+                      <%= conta.nome %><%= conta.administrador ? ' (administrador principal)' : '' %>
+                      <% if (!conta.administrador) { %>
+                        <form id="permissoes-<%= conta._id %>" method="post" action="/usuario/permissoes/<%= conta._id %>"></form>
+                      <% } %>
+                    </td>
+                    <td><%= conta.usuario %></td>
+                    <% if (conta.administrador) { %>
+                      <td colspan="12">Acesso completo a todas as áreas e filiais; conta protegida.</td>
+                    <% } else { %>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[estoque]" <%= conta.permissoes.estoque ? 'checked' : '' %> aria-label="Permitir estoque para <%= conta.nome %>"></td>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[estoqueEditar]" <%= (conta.permissoes.estoqueEditar ?? conta.permissoes.estoque) ? 'checked' : '' %> aria-label="Permitir editar e cadastrar estoque para <%= conta.nome %>"></td>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[estoqueExcluir]" <%= (conta.permissoes.estoqueExcluir ?? conta.permissoes.estoque) ? 'checked' : '' %> aria-label="Permitir excluir ou desativar estoque para <%= conta.nome %>"></td>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[suprimentos]" <%= conta.permissoes.suprimentos ? 'checked' : '' %> aria-label="Permitir suprimentos para <%= conta.nome %>"></td>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[suprimentosEditar]" <%= (conta.permissoes.suprimentosEditar ?? conta.permissoes.suprimentos) ? 'checked' : '' %> aria-label="Permitir editar e cadastrar suprimentos para <%= conta.nome %>"></td>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[suprimentosExcluir]" <%= (conta.permissoes.suprimentosExcluir ?? conta.permissoes.suprimentos) ? 'checked' : '' %> aria-label="Permitir excluir ou desativar suprimentos para <%= conta.nome %>"></td>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[requisicoes]" <%= conta.permissoes.requisicoes ? 'checked' : '' %> aria-label="Permitir requisições para <%= conta.nome %>"></td>
+                      <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="permissoes[administracao]" <%= conta.permissoes.administracao ? 'checked' : '' %> aria-label="Permitir administração para <%= conta.nome %>"></td>
+                      <% [1, 3, 4].forEach((filial) => { %>
+                        <td><input form="permissoes-<%= conta._id %>" type="checkbox" name="filiais" value="<%= filial %>" <%= conta.filiais.includes(filial) ? 'checked' : '' %> aria-label="Permitir filial <%= filial %> para <%= conta.nome %>"></td>
+                      <% }) %>
+                      <td><button form="permissoes-<%= conta._id %>" class="button-primary" type="submit">Salvar</button></td>
+                    <% } %>
+                  </tr>
+                <% }) %>
+                <% if (!usuarios.length) { %>
+                  <tr><td class="empty-state" colspan="14">Nenhum usuário cadastrado.</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted">Cada usuário precisa ter pelo menos uma filial. As alterações passam a valer nas próximas solicitações e páginas carregadas.</p>
+        </section>
+      </div>
+<%- include('partials/app-end') %>

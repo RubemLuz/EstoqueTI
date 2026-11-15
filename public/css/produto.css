@@ -1,0 +1,92 @@
+.form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  gap: 18px;
+}
+
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 22px 0;
+}
+
+.fields-grid label {
+  color: #697386;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.fields-grid input,
+.fields-grid textarea,
+.fields-grid select,
+#filialEdicao {
+  width: 100%;
+  border: 1px solid #ccd3dc;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.fields-grid input,
+.fields-grid textarea,
+.fields-grid select {
+  margin-top: 7px;
+}
+
+.full-field {
+  grid-column: 1 / -1;
+}
+
+.empty-state-box {
+  margin-top: 20px;
+  padding: 48px 20px;
+  border: 1px dashed #ccd3dc;
+  border-radius: 9px;
+  color: #858c99;
+  text-align: center;
+}
+
+.edit-product-row {
+  margin-top: 12px;
+}
+
+.edit-product-summary {
+  display: grid;
+  grid-template-columns: minmax(180px, 2fr) minmax(120px, 1fr) minmax(110px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid #dfe4eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.edit-product-summary span {
+  color: #697386;
+}
+
+.edit-product-button {
+  justify-self: end;
+}
+
+.edit-product-form:not([hidden]) {
+  margin: 12px 0 18px;
+  padding-top: 18px;
+  border-top: 1px solid #e1e5eb;
+}
+
+@media (max-width: 760px) {
+  .form-grid,
+  .fields-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-field {
+    grid-column: auto;
+  }
+
+  .edit-product-summary {
+    grid-template-columns: 1fr auto;
+  }
+}

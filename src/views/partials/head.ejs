@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <% if (typeof activePage !== 'undefined' && activePage === 'inicio') { %>
+    <link rel="stylesheet" href="/css/inicio.css">
+  <% } else if (typeof activePage !== 'undefined' && activePage === 'entrada') { %>
+    <link rel="stylesheet" href="/css/estoque.css">
+    <link rel="stylesheet" href="/css/produto.css">
+  <% } else if (['adicionar', 'editar'].includes(activePage)) { %>
+    <link rel="stylesheet" href="/css/produto.css">
+  <% } else if (activePage === 'excluir') { %>
+    <link rel="stylesheet" href="/css/excluir.css">
+  <% } else if (['suprimentos', 'requisicoes'].includes(activePage)) { %>
+    <link rel="stylesheet" href="/css/estoque.css">
+  <% } else if (activePage === 'usuario') { %>
+    <link rel="stylesheet" href="/css/estoque.css">
+    <link rel="stylesheet" href="/css/usuario.css">
+  <% } %>
+</head>
