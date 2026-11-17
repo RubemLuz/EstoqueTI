@@ -186,7 +186,7 @@ exports.indexProdutos = async (req, res, next) => {
     }).sort({ nome: 1 });
     res.render('saidas_produtos', {
       title: 'Saída de Produtos',
-      activePage: 'entrada',
+      activePage: 'saidasProdutos',
       filial,
       produtos
     });
@@ -235,7 +235,7 @@ exports.indexSuprimentos = async (req, res, next) => {
     ]);
     res.render('saidas_suprimentos', {
       title: 'Saída de Suprimentos',
-      activePage: 'suprimentos',
+      activePage: 'saidasSuprimentos',
       filial,
       suprimentos,
       saidas,
