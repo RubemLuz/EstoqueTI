@@ -25,6 +25,9 @@
     <% if (usuario.administrador || permissoes.requisicoes) { %>
       <a class="menu-link <%= activePage === 'requisicoes' ? 'active' : '' %>" href="/requisicoes-suprimentos"><span class="menu-icon">&#9993;</span><span>Requisições Surpimentos</span></a>
     <% } %>
+    <% if (usuario.administrador || permissoes.transferencias) { %>
+      <a class="menu-link <%= activePage === 'transferencias' ? 'active' : '' %>" href="/transferencias?filial=<%= filial %>"><span class="menu-icon">&#8644;</span><span>Transferências</span></a>
+    <% } %>
   </nav>
   <button class="account-button" id="accountButton" type="button"><span class="menu-icon">&#128100;</span><span>Minha conta</span></button>
 </aside>

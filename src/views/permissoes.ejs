@@ -30,6 +30,7 @@
                   <th>Req. estoque</th>
                   <th>Suprimentos</th>
                   <th>Requisições</th>
+                  <th>Transferências</th>
                   <th>Filiais</th>
                   <th>Status</th>
                   <th>Ação</th>
@@ -51,6 +52,7 @@
                     <td><%= conta.administrador || conta.permissoes.estoqueRequisicoes ? 'Ativo' : 'Inativo' %></td>
                     <td><%= conta.administrador || conta.permissoes.suprimentos ? 'Ativo' : 'Inativo' %></td>
                     <td><%= conta.administrador || conta.permissoes.requisicoes ? 'Ativo' : 'Inativo' %></td>
+                    <td><%= conta.administrador || conta.permissoes.transferencias ? 'Ativo' : 'Inativo' %></td>
                     <td>
                       <% if (conta.administrador) { %>
                         Todas
@@ -71,7 +73,7 @@
                   </tr>
                   <% if (!conta.administrador) { %>
                     <tr id="edit-user-<%= conta._id %>" class="user-edit-row" data-user-edit-row hidden>
-                      <td colspan="10">
+                      <td colspan="11">
                         <div class="user-edit-panel">
                           <h3>Editar <%= conta.nome %> (<%= conta.usuario %>)</h3>
                           <div class="user-edit-grid">
@@ -86,6 +88,7 @@
                                 <label><input type="checkbox" name="permissoes[suprimentosEditar]" <%= (conta.permissoes.suprimentosEditar ?? conta.permissoes.suprimentos) ? 'checked' : '' %>> Cadastrar/editar suprimentos</label>
                                 <label><input type="checkbox" name="permissoes[suprimentosExcluir]" <%= (conta.permissoes.suprimentosExcluir ?? conta.permissoes.suprimentos) ? 'checked' : '' %>> Desativar suprimentos</label>
                                 <label><input type="checkbox" name="permissoes[requisicoes]" <%= conta.permissoes.requisicoes ? 'checked' : '' %>> Requisições</label>
+                                <label><input type="checkbox" name="permissoes[transferencias]" <%= conta.permissoes.transferencias ? 'checked' : '' %>> Transferências entre filiais</label>
                                 <label><input type="checkbox" name="permissoes[administracao]" <%= conta.permissoes.administracao ? 'checked' : '' %>> Administração</label>
                               </fieldset>
                               <fieldset class="permissions-fieldset user-edit-fieldset">
@@ -124,7 +127,7 @@
                   <% } %>
                 <% }) %>
                 <% if (!usuarios.length) { %>
-                  <tr><td class="empty-state" colspan="10">Nenhum usuário cadastrado.</td></tr>
+                  <tr><td class="empty-state" colspan="11">Nenhum usuário cadastrado.</td></tr>
                 <% } %>
               </tbody>
             </table>

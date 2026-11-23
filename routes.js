@@ -6,6 +6,7 @@ const suprimentosRoutes = require('./src/routes/suprimentosRoutes');
 const requisicoesRoutes = require('./src/routes/requisicoesSuprimentosRoutes');
 const requisicoesEstoqueRoutes = require('./src/routes/requisicoesEstoqueRoutes');
 const saidasRoutes = require('./src/routes/saidasRoutes');
+const transferenciasRoutes = require('./src/routes/transferenciasRoutes');
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
 const { autenticar, validarFilial, exigirPermissao } = require('./src/middlewares/autenticacao');
 
@@ -48,6 +49,8 @@ router.use((req, res, next) => {
     }
   } else if (path === '/requisicoes-suprimentos' || path.startsWith('/requisicoes-suprimentos/')) {
     permissoes = ['requisicoes'];
+  } else if (path === '/transferencias' || path.startsWith('/transferencias/')) {
+    permissoes = ['transferencias'];
   }
 
   if (!permissoes) return next();
@@ -59,5 +62,6 @@ router.use('/', suprimentosRoutes);
 router.use('/', requisicoesRoutes);
 router.use('/', requisicoesEstoqueRoutes);
 router.use('/', saidasRoutes);
+router.use('/', transferenciasRoutes);
 
 module.exports = router;

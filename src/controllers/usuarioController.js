@@ -66,6 +66,7 @@ exports.salvarPermissoes = async (req, res, next) => {
       'suprimentosExcluir',
       'requisicoes',
       'estoqueRequisicoes',
+      'transferencias',
       'administracao'
     ]) {
       usuario.permissoes[nome] = permissoesEnviadas[nome] === 'on';
@@ -217,6 +218,7 @@ exports.criar = async (req, res, next) => {
         suprimentosExcluir: permissoesEnviadas.suprimentosExcluir === 'on',
         requisicoes: permissoesEnviadas.requisicoes === 'on',
         estoqueRequisicoes: permissoesEnviadas.estoqueRequisicoes === 'on',
+        transferencias: permissoesEnviadas.transferencias === 'on',
         administracao: permissoesEnviadas.administracao === 'on'
       }
     });

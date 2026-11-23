@@ -47,10 +47,11 @@ const validarFilial = (req, res, next) => {
     '/requisicoes-suprimentos',
     '/requisicoes-estoque',
     '/saidas-produtos',
-    '/saidas-suprimentos'
+    '/saidas-suprimentos',
+    '/transferencias'
   ]);
   const rotaComFilial = rotasComFilial.has(req.path)
-    || ['/entrada_estoque/', '/editar_estoque/', '/adicionar_estoque/', '/excluir_estoque/', '/suprimentos/', '/requisicoes-estoque/', '/saidas-produtos/', '/saidas-suprimentos/']
+    || ['/entrada_estoque/', '/editar_estoque/', '/adicionar_estoque/', '/excluir_estoque/', '/suprimentos/', '/requisicoes-estoque/', '/saidas-produtos/', '/saidas-suprimentos/', '/transferencias/']
       .some((prefixo) => req.path.startsWith(prefixo));
   if (!rotaComFilial) return next();
 
