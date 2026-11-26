@@ -1,5 +1,6 @@
 const ItemEstoque = require('../models/ItemEstoque');
 const Suprimento = require('../models/Suprimento');
+const SaidaProduto = require('../models/SaidaProduto');
 const SaidaSuprimento = require('../models/SaidaSuprimento');
 
 const filtroProdutosFilial = (filial) => filial === 4
@@ -180,15 +181,19 @@ const buscarSaidasSuprimentos = (filial, periodo) => SaidaSuprimento.find({
 exports.indexProdutos = async (req, res, next) => {
   try {
     const filial = req.filial;
-    const produtos = await ItemEstoque.find({
-      ativo: { $ne: false },
-      ...filtroProdutosFilial(filial)
-    }).sort({ nome: 1 });
+    const [produtos, saidas] = await Promise.all([
+      ItemEstoque.find({
+        ativo: { $ne: false },
+        ...filtroProdutosFilial(filial)
+      }).sort({ nome: 1 }),
+      SaidaProduto.find({ filial }).sort({ data: -1 }).limit(10).lean()
+    ]);
     res.render('saidas_produtos', {
       title: 'Saída de Produtos',
       activePage: 'saidasProdutos',
       filial,
-      produtos
+      produtos,
+      saidas
     });
   } catch (error) {
     next(error);
@@ -197,6 +202,7 @@ exports.indexProdutos = async (req, res, next) => {
 
 exports.criarSaidaProdutos = async (req, res, next) => {
   const filial = req.filial;
+  let baixados = [];
   try {
     const itens = await prepararItens(
       ItemEstoque,
@@ -205,10 +211,24 @@ exports.criarSaidaProdutos = async (req, res, next) => {
       filtroProdutosFilial,
       'produto'
     );
-    await baixarItens(ItemEstoque, itens, filial, filtroProdutosFilial);
+    baixados = await baixarItens(ItemEstoque, itens, filial, filtroProdutosFilial);
+    await SaidaProduto.create({
+      filial,
+      data: new Date(),
+      usuario: req.usuario.nome,
+      itens
+    });
+    baixados = [];
     req.flash('success', 'Saída de produtos confirmada e estoque atualizado.');
     voltarParaSaida(res, 'saidas-produtos', filial);
   } catch (error) {
+    if (baixados.length) {
+      try {
+        await reverterBaixas(ItemEstoque, baixados, filial, filtroProdutosFilial);
+      } catch (rollbackError) {
+        return next(new Error(`${error.message} A reversão das baixas também falhou: ${rollbackError.message}`));
+      }
+    }
     if (error.status === 400 || error.status === 409) {
       req.flash('error', error.message);
       return voltarParaSaida(res, 'saidas-produtos', filial);

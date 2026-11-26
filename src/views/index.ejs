@@ -13,12 +13,31 @@
             <div class="summary-grid">
               <article class="summary-card"><span class="summary-label">Produtos diferentes</span><strong><%= resumoFilialSelecionada.totalProdutos %></strong><small>Filial <%= filialSelecionada %></small></article>
               <article class="summary-card"><span class="summary-label">Unidades totais</span><strong><%= resumoFilialSelecionada.totalUnidades %></strong><small>Quantidade atual</small></article>
-              <article class="summary-card"><span class="summary-label">Itens abaixo do mínimo</span><strong><%= resumoFilialSelecionada.abaixoMinimo %></strong><small>Exigem atenção</small></article>
+              <article class="summary-card"><span class="summary-label">Itens no mínimo ou abaixo</span><strong><%= resumoFilialSelecionada.abaixoMinimo %></strong><small>Exigem atenção</small></article>
             </div>
           </section>
         <section class="notice-section">
-          <div class="section-heading"><div><span class="eyebrow">Atualizações</span><h2>Quadros de avisos</h2></div></div>
-          <div class="notice-card"><span class="notice-icon">!</span><div><strong>Nenhum aviso no momento</strong><p>Os avisos de estoque serão exibidos aqui.</p></div></div>
+            <div class="section-heading"><div><span class="eyebrow">Filial <%= filialSelecionada %></span><h2>Quadro de avisos</h2></div></div>
+            <div class="notice-list">
+              <% if (avisos.length) { %>
+                <% avisos.forEach((aviso) => { %>
+                  <a class="notice-card notice-link" href="<%= aviso.href %>">
+                    <span class="notice-icon" aria-hidden="true">!</span>
+                    <span class="notice-copy">
+                      <span class="notice-category"><%= aviso.categoria %></span>
+                      <strong><%= aviso.titulo %></strong>
+                      <span class="notice-description"><%= aviso.descricao %></span>
+                    </span>
+                    <span class="notice-arrow" aria-hidden="true">›</span>
+                  </a>
+                <% }) %>
+              <% } else { %>
+                <div class="notice-card">
+                  <span class="notice-icon" aria-hidden="true">✓</span>
+                  <div><strong>Nenhum aviso no momento</strong><p>Não há avisos pendentes nesta filial nas áreas que você pode acessar.</p></div>
+                </div>
+              <% } %>
+            </div>
         </section>
       </div>
 <%- include('partials/app-end') %>

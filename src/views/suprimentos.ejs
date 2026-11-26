@@ -47,7 +47,7 @@
                 <% if (suprimentos.length) { %>
                   <% suprimentos.forEach((suprimento) => { %>
                     <%# Cada linha tem ações e uma linha de edição associada ao ID do registro. %>
-                    <tr data-supply-row>
+                    <tr id="suprimento-<%= suprimento.id %>" data-supply-row>
                       <td><%= suprimento.nome %></td>
                       <td><%= suprimento.impressora || '-' %></td>
                       <td><%= suprimento.tipo || '-' %></td>

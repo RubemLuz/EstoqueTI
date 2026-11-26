@@ -46,7 +46,7 @@
               <tbody>
                 <% if (itens.length) { %>
                   <% itens.forEach((item) => { %>
-                    <tr data-stock-row>
+                    <tr id="produto-<%= item.id %>" data-stock-row>
                       <td><%= item.nome %></td>
                       <td><%= item.modelo || '-' %></td>
                       <td><%= item.informacaoExtra || '-' %></td>

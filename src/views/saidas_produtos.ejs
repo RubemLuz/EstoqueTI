@@ -52,6 +52,29 @@
               </div>
             </form>
           </dialog>
+
+          <div class="request-history">
+            <h3>Histórico das últimas saídas</h3>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Data</th><th>Usuário</th><th>Produtos retirados</th><th>Total</th></tr></thead>
+                <tbody>
+                  <% if (saidas.length) { %>
+                    <% saidas.forEach((saida) => { %>
+                      <tr>
+                        <td><%= new Date(saida.data).toLocaleString('pt-BR') %></td>
+                        <td><%= saida.usuario %></td>
+                        <td><%= saida.itens.map((item) => `${item.nome} (${item.modelo || '-'}): ${item.quantidade}`).join('; ') %></td>
+                        <td><%= saida.itens.reduce((total, item) => total + item.quantidade, 0) %></td>
+                      </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr><td class="empty-state" colspan="4">Nenhuma saída registrada recentemente.</td></tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </section>
       </div>
 <script src="/js/saidas.js"></script>
